@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apachedep
+spec:
+  selector:
+    matchLabels:
+      app: apacheku
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: apacheku
+    spec:
+      containers:
+        - name: apache
+          image: httpd
+          ports:
+            - containerPort: 80

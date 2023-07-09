@@ -1,0 +1,172 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .container {
+      margin: 50px auto;
+      padding: 20px;
+      width: 400px;
+      background-color: #f2f2f2;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .form-group input[type="number"] {
+      width: 60px;
+    }
+
+    .form-group .ram-warning {
+      color: red;
+    }
+
+    .submit-btn {
+      margin-top: 20px;
+    }
+  </style>
+  <script>
+    var kaliRam = 8;
+    var otherRam = 4;
+
+    function calculateTotalRam(formId) {
+      var kaliCount = parseInt(document.getElementById(formId + "kaliCount").value);
+      var rockyCount = parseInt(document.getElementById(formId + "rockyCount").value);
+      var ubuntuCount = parseInt(document.getElementById(formId + "ubuntuCount").value);
+      var centosCount = parseInt(document.getElementById(formId + "centosCount").value);
+      var totalRam = kaliCount * kaliRam + (rockyCount + ubuntuCount + centosCount) * otherRam;
+
+      document.getElementById(formId + "totalRam").value = totalRam;
+
+      var ramWarning = document.getElementById(formId + "ramWarning");
+      var submitButton = document.getElementById(formId + "submitButton");
+
+      if (totalRam > 32) {
+        ramWarning.innerHTML = "Total RAM should not exceed 32GB.";
+        submitButton.disabled = true;
+      } else {
+        ramWarning.innerHTML = "";
+        submitButton.disabled = false;
+      }
+    }
+  </script>
+</head>
+<body>
+
+<div class="container">
+  <h2>Submit Kubernetes Container Information</h2>
+
+  <form id="containerForm" action="process.jsp" method="post">
+    <div class="form-group">
+      <label for="kaliCount">Kali Instances:</label>
+      <input type="number" id="containerFormkaliCount" name="kaliCount" min="0" max="10" value="0" oninput="calculateTotalRam('containerForm')">
+    </div>
+    <div class="form-group">
+      <label for="rockyCount">Rocky Instances:</label>
+      <input type="number" id="containerFormrockyCount" name="rockyCount" min="0" max="10" value="0" oninput="calculateTotalRam('containerForm')">
+    </div>
+    <div class="form-group">
+      <label for="ubuntuCount">Ubuntu Instances:</label>
+      <input type="number" id="containerFormubuntuCount" name="ubuntuCount" min="0" max="10" value="0" oninput="calculateTotalRam('containerForm')">
+    </div>
+    <div class="form-group">
+      <label for="centosCount">CentOS Instances:</label>
+      <input type="number" id="containerFormcentosCount" name="centosCount" min="0" max="10" value="0" oninput="calculateTotalRam('containerForm')">
+    </div>
+    <div class="form-group">
+      <label for="totalRam">Total RAM (GB):</label>
+      <input type="number" id="containerFormtotalRam" name="totalRam" min="1" max="32" readonly>
+      <span id="containerFormramWarning" class="ram-warning"></span>
+    </div>
+    <input type="submit" id="containerFormsubmitButton" class="submit-btn" value="Submit">
+  </form>
+</div>
+
+<div class="container">
+  <h2>Submit Kubernetes Container Information</h2>
+
+  <form id="containerForm2" action="process.jsp" method="post">
+    <div class="form-group">
+      <label for="kaliCount2">Kali Instances:</label>
+      <input type="number" id="containerForm2kaliCount" name="kaliCount2" min="0" max="10" value="0" oninput="calculateTotalRam('containerForm2')">
+    </div>
+    <div class="form-group">
+      <label for="rockyCount2">Rocky Instances:</label>
+      <input type="number" id="containerForm2rockyCount" name="rockyCount2" min="0" max="10" value="0" oninput="calculateTotalRam('containerForm2')">
+    </div>
+    <div class="form-group">
+      <label for="ubuntuCount2">Ubuntu Instances:</label>
+      <input type="number" id="containerForm2ubuntuCount" name="ubuntuCount2" min="0" max="10" value="0" oninput="calculateTotalRam('containerForm2')">
+    </div>
+    <div class="form-group">
+      <label for="centosCount2">CentOS Instances:</label>
+      <input type="number" id="containerForm2centosCount" name="centosCount2" min="0" max="10" value="0" oninput="calculateTotalRam('containerForm2')">
+    </div>
+    <div class="form-group">
+      <label for="totalRam2">Total RAM (GB):</label>
+      <input type="number" id="containerForm2totalRam" name="totalRam2" min="1" max="32" readonly>
+      <span id="containerForm2ramWarning" class="ram-warning"></span>
+    </div>
+    <input type="submit" id="containerForm2submitButton" class="submit-btn" value="Submit">
+  </form>
+</div>
+
+<script>
+  // 첫 번째 컨테이너 폼 데이터 처리
+  document.getElementById("containerForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    var totalRam = parseInt(document.getElementById("containerFormtotalRam").value);
+    if (totalRam > 32) {
+      document.getElementById("containerFormramWarning").innerHTML = "Total RAM should not exceed 32GB.";
+      return;
+    } else {
+      document.getElementById("containerFormramWarning").innerHTML = "";
+    }
+
+    // 여기에서 데이터를 처리하거나 서버로 전송할 수 있습니다.
+    // 예를 들어, 데이터를 서버로 전송하거나 처리하는 로직을 추가할 수 있습니다.
+
+    console.log("첫 번째 컨테이너 폼 데이터:");
+    console.log("Total RAM (GB):", totalRam);
+
+    document.getElementById("containerForm").reset();
+  });
+
+  // 두 번째 컨테이너 폼 데이터 처리
+  document.getElementById("containerForm2").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    var totalRam2 = parseInt(document.getElementById("containerForm2totalRam").value);
+    if (totalRam2 > 32) {
+      document.getElementById("containerForm2ramWarning").innerHTML = "Total RAM should not exceed 32GB.";
+      return;
+    } else {
+      document.getElementById("containerForm2ramWarning").innerHTML = "";
+    }
+
+    // 여기에서 데이터를 처리하거나 서버로 전송할 수 있습니다.
+    // 예를 들어, 데이터를 서버로 전송하거나 처리하는 로직을 추가할 수 있습니다.
+
+    console.log("두 번째 컨테이너 폼 데이터:");
+    console.log("Total RAM (GB):", totalRam2);
+
+    document.getElementById("containerForm2").reset();
+  });
+</script>
+
+</body>
+</html>

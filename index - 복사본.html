@@ -1,0 +1,105 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .container {
+      margin: 50px auto;
+      padding: 20px;
+      width: 400px;
+      background-color: #f2f2f2;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .form-group input[type="number"] {
+      width: 60px;
+    }
+
+    .form-group .ram-warning {
+      color: red;
+    }
+
+    .submit-btn {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Submit Kubernetes Container Information</h2>
+
+  <form id="containerForm" action="process.jsp" method="post">
+    <div class="form-group">
+      <label for="kaliCount">Kali Instances:</label>
+      <input type="number" id="kaliCount" name="kaliCount" min="0" max="10" value="0">
+    </div>
+    <div class="form-group">
+      <label for="rockyCount">Rocky Instances:</label>
+      <input type="number" id="rockyCount" name="rockyCount" min="0" max="10" value="0">
+    </div>
+    <div class="form-group">
+      <label for="ubuntuCount">Ubuntu Instances:</label>
+      <input type="number" id="ubuntuCount" name="ubuntuCount" min="0" max="10" value="0">
+    </div>
+    <div class="form-group">
+      <label for="centosCount">CentOS Instances:</label>
+      <input type="number" id="centosCount" name="centosCount" min="0" max="10" value="0">
+    </div>
+    <div class="form-group">
+      <label for="totalRam">Total RAM (GB):</label>
+      <input type="number" id="totalRam" name="totalRam" min="1" max="32" readonly>
+      <span class="ram-warning"></span>
+    </div>
+    <input type="submit" class="submit-btn" value="Submit">
+  </form>
+</div>
+
+<script>
+// 초기 RAM 할당
+var kaliRam = 8;
+var otherRam = 4;
+calculateTotalRam();
+
+// 개별 OS 인스턴스 수 변경 시 이벤트 처리
+document.getElementById("kaliCount").addEventListener("input", calculateTotalRam);
+document.getElementById("rockyCount").addEventListener("input", calculateTotalRam);
+document.getElementById("ubuntuCount").addEventListener("input", calculateTotalRam);
+document.getElementById("centosCount").addEventListener("input", calculateTotalRam);
+
+function calculateTotalRam() {
+  var kaliCount = parseInt(document.getElementById("kaliCount").value);
+  var rockyCount = parseInt(document.getElementById("rockyCount").value);
+  var ubuntuCount = parseInt(document.getElementById("ubuntuCount").value);
+  var centosCount = parseInt(document.getElementById("centosCount").value);
+  var totalRam = kaliCount * kaliRam + (rockyCount + ubuntuCount + centosCount) * otherRam;
+
+  document.getElementById("totalRam").value = totalRam;
+
+  // 총 RAM 제한 초과 여부 확인
+  var ramWarning = document.querySelector(".ram-warning");
+  if (totalRam > 32) {
+    ramWarning.innerHTML = "Total RAM should not exceed 32GB.";
+  } else {
+    ramWarning.innerHTML = "";
+  }
+}
+</script>
+
+</body>
+</html>
